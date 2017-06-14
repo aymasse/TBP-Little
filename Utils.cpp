@@ -18,7 +18,15 @@ vector<Coordinates> getCoordinates(string fileName) {
             pos = currentLine.find(delimiter);
 
             if (pos != string::npos) {
-                index = stoi(currentLine.substr(0, pos));
+                try {
+                    index = stoi(currentLine.substr(0, pos));
+                } catch (...) {
+                    cout << "Error while converting index into an integer."
+                         << "Setting to default value : 0."
+                         << endl;
+                    index = 0;
+                }
+
                 currentLine.erase(0, pos + delimiter.length());
             }
 
@@ -26,7 +34,14 @@ vector<Coordinates> getCoordinates(string fileName) {
             pos = currentLine.find(delimiter);
 
             if (pos != string::npos) {
-                x = stof(currentLine.substr(0, pos));
+                try {
+                    x = stof(currentLine.substr(0, pos));
+                } catch (...) {
+                    cout << "Error while converting x into a float."
+                         << "Setting to default value : 0."
+                         << endl;
+                    x = 0;
+                }
                 currentLine.erase(0, pos + delimiter.length());
             }
 
@@ -34,7 +49,14 @@ vector<Coordinates> getCoordinates(string fileName) {
             pos = currentLine.find(delimiter);
 
             if (pos != string::npos) {
-                y = stof(currentLine.substr(0, pos));
+                try {
+                    y = stof(currentLine.substr(0, pos));
+                } catch (...) {
+                    cout << "Error while converting y into a float."
+                         << "Setting to default value : 0."
+                         << endl;
+                    y = 0;
+                }
             }
 
             //Log
