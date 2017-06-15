@@ -73,11 +73,7 @@ vector<Coordinates> getCoordinates(string fileName) {
             coordinates.push_back(Coordinates(x, y));
         }
     } else {
-        cout << "Unable to open "
-             << fileName
-             << ". "
-             << "Coordinates object is empty."
-             << endl;
+        throw ios_base::failure("Error while opening " + fileName);
     }
 
     if (coordinates.size() != NUMBER_OF_POINTS) {

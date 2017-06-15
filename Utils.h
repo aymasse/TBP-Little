@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <exception>
 
 #include "Coordinates.h"
 #include "Eigen/Core"
