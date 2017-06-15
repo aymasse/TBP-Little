@@ -1,8 +1,6 @@
 #ifndef TBP_LITTLE_UTILS_H
 #define TBP_LITTLE_UTILS_H
 
-#define NUMBER_OF_POINTS 38
-
 #include <vector>
 #include <fstream>
 #include <string>
@@ -27,6 +25,6 @@ vector<Coordinates> getCoordinates(string fileName);
  * @param coordinates a vector of coordinates
  * @return A matrix of doubles
  */
-Matrix<double, NUMBER_OF_POINTS, NUMBER_OF_POINTS> getDistancesMatrix(vector<Coordinates> coordinates);
+Matrix<double, Dynamic, Dynamic> getDistancesMatrix(vector<Coordinates> coordinates);
 
 #endif //TBP_LITTLE_UTILS_H

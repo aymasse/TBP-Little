@@ -76,23 +76,18 @@ vector<Coordinates> getCoordinates(string fileName) {
         throw ios_base::failure("Error while opening " + fileName);
     }
 
-    if (coordinates.size() != NUMBER_OF_POINTS) {
-        cout << "The number of coordinates entered in the vector ("
-             << coordinates.size()
-             << ") is somewhat different from the expected value of "
-             << NUMBER_OF_POINTS
-             << endl;
-    }
-
     return coordinates;
 }
 
-Matrix<double, NUMBER_OF_POINTS, NUMBER_OF_POINTS> getDistancesMatrix(vector<Coordinates> coordinates) {
-    Matrix<double, NUMBER_OF_POINTS, NUMBER_OF_POINTS> matrix = Matrix<double, NUMBER_OF_POINTS, NUMBER_OF_POINTS>();
+Matrix<double, Dynamic, Dynamic> getDistancesMatrix(vector<Coordinates> coordinates) {
+    Matrix<double, Dynamic, Dynamic> matrix = Matrix<double, Dynamic, Dynamic>();
+    size_t numberOfPoints = coordinates.size();
+
+    matrix.resize(numberOfPoints, numberOfPoints);
 
     //Filling the matrix
-    for (size_t row = 0; row < coordinates.size(); ++row) {
-        for (size_t column = 0; column < coordinates.size(); ++column) {
+    for (size_t row = 0; row < numberOfPoints; ++row) {
+        for (size_t column = 0; column < numberOfPoints; ++column) {
             if (row != column) {
                 matrix(row, column) = coordinates[row].computeDistanceWith(coordinates[column]);
             } else {
