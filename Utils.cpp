@@ -79,8 +79,8 @@ vector<Coordinates> getCoordinates(string fileName) {
     return coordinates;
 }
 
-Matrix<double, Dynamic, Dynamic> getDistancesMatrix(vector<Coordinates> coordinates) {
-    Matrix<double, Dynamic, Dynamic> matrix = Matrix<double, Dynamic, Dynamic>();
+MatrixXd getDistancesMatrix(vector<Coordinates> coordinates) {
+    MatrixXd matrix = MatrixXd();
     size_t numberOfPoints = coordinates.size();
 
     matrix.resize(numberOfPoints, numberOfPoints);
@@ -91,11 +91,35 @@ Matrix<double, Dynamic, Dynamic> getDistancesMatrix(vector<Coordinates> coordina
             if (row != column) {
                 matrix(row, column) = coordinates[row].computeDistanceWith(coordinates[column]);
             } else {
-                //The distance from a point to itself is set to -1
-                matrix(row, column) = -1;
+                //The distance from a point to itself is set to max value
+                matrix(row, column) = numeric_limits<double>::max();
             }
         }
     }
 
     return matrix;
+}
+
+double getMatrixRowMin(MatrixXd matrix, size_t row) {
+    double rowMin = 0;
+
+    if (matrix.rows() > row) {
+        rowMin = matrix.block(1, matrix.cols(), row, 0).minCoeff();
+    } else {
+        throw out_of_range("Given row index is out of matrix bounds.");
+    }
+
+    return rowMin;
+}
+
+double getMatrixColumnMin(MatrixXd matrix, size_t column) {
+    double columnMin = 0;
+
+    if (matrix.cols() > column) {
+        columnMin = matrix.block(matrix.cols(), 1, 0, column).minCoeff();
+    } else {
+        throw out_of_range("Given column index is out of matrix bounds.");
+    }
+
+    return columnMin;
 }
