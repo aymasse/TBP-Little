@@ -72,7 +72,39 @@ vector<Coordinates> getCoordinates(string fileName) {
             //Pushing into the vector
             coordinates.push_back(Coordinates(x, y));
         }
+    } else {
+        cout << "Unable to open "
+             << fileName
+             << ". "
+             << "Coordinates object is empty."
+             << endl;
+    }
+
+    if (coordinates.size() != NUMBER_OF_POINTS) {
+        cout << "The number of coordinates entered in the vector ("
+             << coordinates.size()
+             << ") is somewhat different from the expected value of "
+             << NUMBER_OF_POINTS
+             << endl;
     }
 
     return coordinates;
+}
+
+Matrix<double, NUMBER_OF_POINTS, NUMBER_OF_POINTS> getDistancesMatrix(vector<Coordinates> coordinates) {
+    Matrix<double, NUMBER_OF_POINTS, NUMBER_OF_POINTS> matrix = Matrix<double, NUMBER_OF_POINTS, NUMBER_OF_POINTS>();
+
+    //Filling the matrix
+    for (size_t row = 0; row < coordinates.size(); ++row) {
+        for (size_t column = 0; column < coordinates.size(); ++column) {
+            if (row != column) {
+                matrix(row, column) = coordinates[row].computeDistanceWith(coordinates[column]);
+            } else {
+                //The distance from a point to itself is set to -1
+                matrix(row, column) = -1;
+            }
+        }
+    }
+
+    return matrix;
 }

@@ -2,22 +2,26 @@
 
 Coordinates::Coordinates() {}
 
-Coordinates::Coordinates(float x, float y) : x(x), y(y) {}
+Coordinates::Coordinates(double x, double y) : x(x), y(y) {}
 
 Coordinates::~Coordinates() {}
 
-float Coordinates::getX() const {
+double Coordinates::getX() const {
     return x;
 }
 
-void Coordinates::setX(float x) {
+void Coordinates::setX(double x) {
     Coordinates::x = x;
 }
 
-float Coordinates::getY() const {
+double Coordinates::getY() const {
     return y;
 }
 
-void Coordinates::setY(float y) {
+void Coordinates::setY(double y) {
     Coordinates::y = y;
+}
+
+double Coordinates::computeDistanceWith(Coordinates other) {
+    return sqrt(pow(other.getX() - getX(), 2) + pow(other.getY() - getY(), 2));
 }

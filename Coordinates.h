@@ -1,25 +1,28 @@
 #ifndef TBP_LITTLE_COORDINATES_H
 #define TBP_LITTLE_COORDINATES_H
 
+#include <cmath>
 
 class Coordinates {
 private:
-    float x;
-    float y;
+    double x;
+    double y;
 public:
     Coordinates();
 
-    Coordinates(float x, float y);
+    Coordinates(double x, double y);
 
     virtual ~Coordinates();
 
-    float getX() const;
+    double getX() const;
 
-    void setX(float x);
+    void setX(double x);
 
-    float getY() const;
+    double getY() const;
 
-    void setY(float y);
+    void setY(double y);
+
+    double computeDistanceWith(Coordinates other);
 };
 
 
