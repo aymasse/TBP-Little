@@ -1,44 +1,37 @@
 #ifndef TBP_LITTLE_LITTLENODE_H
 #define TBP_LITTLE_LITTLENODE_H
 
+#include <vector>
+
 #include "Eigen/Core"
+#include "Segment.h"
 
 using namespace Eigen;
-
+using namespace std;
 
 class LittleNode {
 private:
-    MatrixXd matrix;
+    MatrixXd *matrix;
     double value;
-    LittleNode *exclude;
-    LittleNode *include;
-    LittleNode *parent;
+    vector<Segment> segments;
 public:
     LittleNode();
 
-    LittleNode(const MatrixXd &matrix);
+    LittleNode(MatrixXd *matrix);
 
-    LittleNode(const MatrixXd &matrix, LittleNode *parent);
+    LittleNode(MatrixXd *matrix, double value, const vector<Segment> &segments);
 
-    const MatrixXd &getMatrix() const;
+    MatrixXd *getMatrix() const;
 
-    void setMatrix(const MatrixXd &matrix);
+    void setMatrix(MatrixXd *matrix);
 
     double getValue() const;
 
     void setValue(double value);
 
-    LittleNode *getExclude() const;
+    const vector<Segment> &getSegments() const;
 
-    void setExclude(LittleNode *exclude);
-
-    LittleNode *getInclude() const;
-
-    void setInclude(LittleNode *include);
-
-    LittleNode *getParent() const;
-
-    void setParent(LittleNode *parent);
+    void setSegments(const vector<Segment> &segments);
 };
 
 

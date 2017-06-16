@@ -79,20 +79,20 @@ vector<Coordinates> getCoordinates(string fileName) {
     return coordinates;
 }
 
-MatrixXd getDistancesMatrix(vector<Coordinates> coordinates) {
-    MatrixXd matrix = MatrixXd();
+MatrixXd *getDistancesMatrix(vector<Coordinates> coordinates) {
+    MatrixXd *matrix = new MatrixXd();
     size_t numberOfPoints = coordinates.size();
 
-    matrix.resize(numberOfPoints, numberOfPoints);
+    matrix->resize(numberOfPoints, numberOfPoints);
 
     //Filling the matrix
     for (size_t row = 0; row < numberOfPoints; ++row) {
         for (size_t column = 0; column < numberOfPoints; ++column) {
             if (row != column) {
-                matrix(row, column) = coordinates[row].computeDistanceWith(coordinates[column]);
+                (*matrix)(row, column) = coordinates[row].computeDistanceWith(coordinates[column]);
             } else {
                 //The distance from a point to itself is set to max value
-                matrix(row, column) = numeric_limits<double>::max();
+                (*matrix)(row, column) = numeric_limits<double>::max();
             }
         }
     }

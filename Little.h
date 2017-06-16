@@ -3,16 +3,18 @@
 
 #include <stack>
 #include <limits>
+#include <vector>
 
 #include "LittleNode.h"
 #include "Segment.h"
+#include "Utils.h"
 
 using namespace std;
 
 class Little {
 private:
     stack<LittleNode> nodes;
-    stack<Segment> segments;
+    vector<Segment> segments;
     double reference;
 public:
     Little();
@@ -23,13 +25,17 @@ public:
 
     void setNodes(const stack<LittleNode> &nodes);
 
-    const stack<Segment> &getSegments() const;
+    const vector<Segment> &getSegments() const;
 
-    void setSegments(const stack<Segment> &segments);
+    void setSegments(const vector<Segment> &segments);
 
     double getReference() const;
 
     void setReference(double reference);
+
+    void start();
+
+    void examineNode(LittleNode node);
 };
 
 

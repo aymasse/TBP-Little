@@ -26,7 +26,7 @@ vector<Coordinates> getCoordinates(string fileName);
  * @param coordinates a vector of coordinates
  * @return A matrix of doubles
  */
-MatrixXd getDistancesMatrix(vector<Coordinates> coordinates);
+MatrixXd *getDistancesMatrix(vector<Coordinates> coordinates);
 
 /**
  * Reduce a matrix row according to Little's algorithm
