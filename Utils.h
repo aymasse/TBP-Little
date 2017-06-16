@@ -29,19 +29,34 @@ vector<Coordinates> getCoordinates(string fileName);
 MatrixXd getDistancesMatrix(vector<Coordinates> coordinates);
 
 /**
- * Return the lowest value of the specified row
- * @param matrix matrix
- * @param row row index
- * @return the lowest value of the row
+ * Reduce a matrix row according to Little's algorithm
+ * @param matrix the matrix to reduce
+ * @param row the matrix's row index
+ * @return the value reduced
  */
-double getMatrixRowMin(MatrixXd matrix, size_t row);
+double reduceMatrixRow(MatrixXd *matrix, size_t row);
 
 /**
- * Return the lowest value of the specified column
- * @param matrix matrix
- * @param column column index
- * @return the lowest value of the column
+ * Reduce a matrix column according to Little's algorithm
+ * @param matrix the matrix to reduce
+ * @param col the matrix's column index
+ * @return the value reduced
  */
-double getMatrixColumnMin(MatrixXd matrix, size_t column);
+double reduceMatrixCol(MatrixXd *matrix, size_t col);
+
+/**
+ * Reduce all the matrix's row
+ * @param matrix the matrix
+ * @return the total amount reduced
+ */
+double reduceMatrixRows(MatrixXd *matrix);
+
+/**
+ * Reduce all the matrix's columns
+ * @param matrix the matrix
+ * @return the total amount reduced
+ */
+double reduceMatrixCols(MatrixXd *matrix);
+
 
 #endif //TBP_LITTLE_UTILS_H

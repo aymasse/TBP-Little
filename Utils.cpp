@@ -100,26 +100,50 @@ MatrixXd getDistancesMatrix(vector<Coordinates> coordinates) {
     return matrix;
 }
 
-double getMatrixRowMin(MatrixXd matrix, size_t row) {
-    double rowMin = 0;
+double reduceMatrixRow(MatrixXd *matrix, size_t row) {
+    if (matrix->rows() > row) {
+        double rowMin = matrix->row(row).minCoeff();
 
-    if (matrix.rows() > row) {
-        rowMin = matrix.block(1, matrix.cols(), row, 0).minCoeff();
+        for (size_t col = 0; col < matrix->cols(); ++col) {
+            (*matrix)(row, col) -= rowMin;
+        }
+
+        return rowMin;
     } else {
-        throw out_of_range("Given row index is out of matrix bounds.");
+        throw out_of_range("Provided row index is out of matrix bounds.");
     }
-
-    return rowMin;
 }
 
-double getMatrixColumnMin(MatrixXd matrix, size_t column) {
-    double columnMin = 0;
+double reduceMatrixCol(MatrixXd *matrix, size_t col) {
+    if (matrix->cols() > col) {
+        double colMin = matrix->col(col).minCoeff();
 
-    if (matrix.cols() > column) {
-        columnMin = matrix.block(matrix.cols(), 1, 0, column).minCoeff();
+        for (size_t row = 0; row < matrix->rows(); ++row) {
+            (*matrix)(row, col) -= colMin;
+        }
+
+        return colMin;
     } else {
-        throw out_of_range("Given column index is out of matrix bounds.");
+        throw out_of_range("Provided column index is out of matrix bounds.");
+    }
+}
+
+double reduceMatrixRows(MatrixXd *matrix) {
+    double reducedSum = 0;
+
+    for (size_t row = 0; row < matrix->rows(); ++row) {
+        reducedSum += reduceMatrixRow(matrix, row);
     }
 
-    return columnMin;
+    return reducedSum;
+}
+
+double reduceMatrixCols(MatrixXd *matrix) {
+    double reducedSum = 0;
+
+    for (size_t col = 0; col < matrix->rows(); ++col) {
+        reducedSum += reduceMatrixCol(matrix, col);
+    }
+
+    return reducedSum;
 }
