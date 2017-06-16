@@ -95,6 +95,10 @@ void LittleNode::removeMatrixRow(long row) {
     long nbRows = matrix->rows() - 1;
     long nbCols = matrix->cols();
 
+    if (row > nbRows) {
+        throw out_of_range("Provided row index is out of matrix range.");
+    }
+
     if (row < nbRows) {
         matrix->block(row, 0, nbRows - row, nbCols) = matrix->block(row + 1, 0, nbRows - row, nbCols);
     }
@@ -105,6 +109,10 @@ void LittleNode::removeMatrixRow(long row) {
 void LittleNode::removeMatrixCol(long col) {
     long nbRows = matrix->rows();
     long nbCols = matrix->cols() - 1;
+
+    if (col > nbCols) {
+        throw out_of_range("Provided column index is out of matrix range.");
+    }
 
     if (col < nbCols) {
         matrix->block(0, col, nbRows, nbCols - col) = matrix->block(0, col + 1, nbRows, nbCols - col);
