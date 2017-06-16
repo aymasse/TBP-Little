@@ -58,7 +58,7 @@ void Little::examineNode(LittleNode node) {
     if (node.getMatrix()->size() > 4) {
         //Not last node
         node.setValue(node.reduceMatrix());
-        //TODO
+
     } else {
         //Last node
 
