@@ -58,5 +58,12 @@ double reduceMatrixRows(MatrixXd *matrix);
  */
 double reduceMatrixCols(MatrixXd *matrix);
 
+/**
+ * Reduce the matrix rows and columns
+ * @param matrix the matrix
+ * @return the total amount reduced
+ */
+double reduceMatrix(MatrixXd *matrix);
+
 
 #endif //TBP_LITTLE_UTILS_H

@@ -147,3 +147,12 @@ double reduceMatrixCols(MatrixXd *matrix) {
 
     return reducedSum;
 }
+
+double reduceMatrix(MatrixXd *matrix) {
+    double reducedSum = 0;
+
+    reducedSum += reduceMatrixRows(matrix);
+    reducedSum += reduceMatrixCols(matrix);
+
+    return reducedSum;
+}
