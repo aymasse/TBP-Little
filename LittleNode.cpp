@@ -35,7 +35,7 @@ void LittleNode::setMatrix(MatrixXd *matrix) {
 }
 
 double LittleNode::reduceMatrixRow(long row) {
-    if (matrix->rows() > row) {
+    if (matrix->rows() > row || row < 0) {
         double rowMin = matrix->row(row).minCoeff();
 
         for (size_t col = 0; col < matrix->cols(); ++col) {
@@ -49,7 +49,7 @@ double LittleNode::reduceMatrixRow(long row) {
 }
 
 double LittleNode::reduceMatrixCol(long col) {
-    if (matrix->cols() > col) {
+    if (matrix->cols() > col || col < 0) {
         double colMin = matrix->col(col).minCoeff();
 
         for (size_t row = 0; row < matrix->rows(); ++row) {
@@ -95,7 +95,7 @@ void LittleNode::removeMatrixRow(long row) {
     long nbRows = matrix->rows() - 1;
     long nbCols = matrix->cols();
 
-    if (row > nbRows) {
+    if (row > nbRows || row < 0) {
         throw out_of_range("Provided row index is out of matrix range.");
     }
 
@@ -110,7 +110,7 @@ void LittleNode::removeMatrixCol(long col) {
     long nbRows = matrix->rows();
     long nbCols = matrix->cols() - 1;
 
-    if (col > nbCols) {
+    if (col > nbCols || col < 0) {
         throw out_of_range("Provided column index is out of matrix range.");
     }
 
