@@ -39,7 +39,7 @@ public:
      * @param row the matrix's row index
      * @return the value reduced
      */
-    double reduceMatrixRow(long row);
+    double reduceMatrixRow(size_t row);
 
     /**
      * Reduce a matrix column according to Little's algorithm
@@ -47,7 +47,7 @@ public:
      * @param col the matrix's column index
      * @return the value reduced
      */
-    double reduceMatrixCol(long col);
+    double reduceMatrixCol(size_t col);
 
     /**
      * Reduce all the matrix's row
@@ -74,13 +74,13 @@ public:
      * Remove a row from the matrix
      * @param row the row index
      */
-    void removeMatrixRow(long row);
+    void removeMatrixRow(size_t row);
 
     /**
      * Remove a column from the matrix
      * @param col the column index
      */
-    void removeMatrixCol(long col);
+    void removeMatrixCol(size_t col);
 };
 
 

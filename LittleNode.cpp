@@ -34,7 +34,7 @@ void LittleNode::setMatrix(MatrixXd *matrix) {
     LittleNode::matrix = matrix;
 }
 
-double LittleNode::reduceMatrixRow(long row) {
+double LittleNode::reduceMatrixRow(size_t row) {
     if (matrix->rows() > row || row < 0) {
         double rowMin = matrix->row(row).minCoeff();
 
@@ -48,7 +48,7 @@ double LittleNode::reduceMatrixRow(long row) {
     }
 }
 
-double LittleNode::reduceMatrixCol(long col) {
+double LittleNode::reduceMatrixCol(size_t col) {
     if (matrix->cols() > col || col < 0) {
         double colMin = matrix->col(col).minCoeff();
 
@@ -91,7 +91,7 @@ double LittleNode::reduceMatrix() {
     return reducedSum;
 }
 
-void LittleNode::removeMatrixRow(long row) {
+void LittleNode::removeMatrixRow(size_t row) {
     long nbRows = matrix->rows() - 1;
     long nbCols = matrix->cols();
 
@@ -106,7 +106,7 @@ void LittleNode::removeMatrixRow(long row) {
     matrix->conservativeResize(nbRows, nbCols);
 }
 
-void LittleNode::removeMatrixCol(long col) {
+void LittleNode::removeMatrixCol(size_t col) {
     long nbRows = matrix->rows();
     long nbCols = matrix->cols() - 1;
 
