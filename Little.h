@@ -52,43 +52,6 @@ public:
      * @return A matrix of doubles
      */
     MatrixXd *getDistancesMatrix(vector<Coordinates> coordinates);
-
-    /**
-     * Reduce a matrix row according to Little's algorithm
-     * @param matrix the matrix to reduce
-     * @param row the matrix's row index
-     * @return the value reduced
-     */
-    double reduceMatrixRow(MatrixXd *matrix, size_t row);
-
-    /**
-     * Reduce a matrix column according to Little's algorithm
-     * @param matrix the matrix to reduce
-     * @param col the matrix's column index
-     * @return the value reduced
-     */
-    double reduceMatrixCol(MatrixXd *matrix, size_t col);
-
-    /**
-     * Reduce all the matrix's row
-     * @param matrix the matrix
-     * @return the total amount reduced
-     */
-    double reduceMatrixRows(MatrixXd *matrix);
-
-    /**
-     * Reduce all the matrix's columns
-     * @param matrix the matrix
-     * @return the total amount reduced
-     */
-    double reduceMatrixCols(MatrixXd *matrix);
-
-    /**
-     * Reduce the matrix rows and columns
-     * @param matrix the matrix
-     * @return the total amount reduced
-     */
-    double reduceMatrix(MatrixXd *matrix);
 };
 
 

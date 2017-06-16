@@ -34,3 +34,60 @@ void LittleNode::setMatrix(MatrixXd *matrix) {
     LittleNode::matrix = matrix;
 }
 
+double LittleNode::reduceMatrixRow(size_t row) {
+    if (matrix->rows() > row) {
+        double rowMin = matrix->row(row).minCoeff();
+
+        for (size_t col = 0; col < matrix->cols(); ++col) {
+            (*matrix)(row, col) -= rowMin;
+        }
+
+        return rowMin;
+    } else {
+        throw out_of_range("Provided row index is out of matrix bounds.");
+    }
+}
+
+double LittleNode::reduceMatrixCol(size_t col) {
+    if (matrix->cols() > col) {
+        double colMin = matrix->col(col).minCoeff();
+
+        for (size_t row = 0; row < matrix->rows(); ++row) {
+            (*matrix)(row, col) -= colMin;
+        }
+
+        return colMin;
+    } else {
+        throw out_of_range("Provided column index is out of matrix bounds.");
+    }
+}
+
+double LittleNode::reduceMatrixRows() {
+    double reducedSum = 0;
+
+    for (size_t row = 0; row < matrix->rows(); ++row) {
+        reducedSum += reduceMatrixRow(row);
+    }
+
+    return reducedSum;
+}
+
+double LittleNode::reduceMatrixCols() {
+    double reducedSum = 0;
+
+    for (size_t col = 0; col < matrix->rows(); ++col) {
+        reducedSum += reduceMatrixCol(col);
+    }
+
+    return reducedSum;
+}
+
+double LittleNode::reduceMatrix() {
+    double reducedSum = 0;
+
+    reducedSum += reduceMatrixRows();
+    reducedSum += reduceMatrixCols();
+
+    return reducedSum;
+}
+

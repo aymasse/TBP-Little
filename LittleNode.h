@@ -32,6 +32,43 @@ public:
     const vector<Segment> &getSegments() const;
 
     void setSegments(const vector<Segment> &segments);
+
+    /**
+     * Reduce a matrix row according to Little's algorithm
+     * @param matrix the matrix to reduce
+     * @param row the matrix's row index
+     * @return the value reduced
+     */
+    double reduceMatrixRow(size_t row);
+
+    /**
+     * Reduce a matrix column according to Little's algorithm
+     * @param matrix the matrix to reduce
+     * @param col the matrix's column index
+     * @return the value reduced
+     */
+    double reduceMatrixCol(size_t col);
+
+    /**
+     * Reduce all the matrix's row
+     * @param matrix the matrix
+     * @return the total amount reduced
+     */
+    double reduceMatrixRows();
+
+    /**
+     * Reduce all the matrix's columns
+     * @param matrix the matrix
+     * @return the total amount reduced
+     */
+    double reduceMatrixCols();
+
+    /**
+     * Reduce the matrix rows and columns
+     * @param matrix the matrix
+     * @return the total amount reduced
+     */
+    double reduceMatrix();
 };
 
 
