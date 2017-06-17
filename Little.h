@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <chrono>
 
 #include "LittleNode.h"
 #include "Segment.h"
@@ -13,13 +14,20 @@
 
 using namespace std;
 
+typedef chrono::high_resolution_clock Clock;
+
 class Little {
 private:
     stack<LittleNode> nodes;
     vector<Segment> segments;
     double reference;
+    MatrixXd *distanceMatrix;
+    string fileName;
+    size_t nbOfVisitedNodes;
 public:
     Little();
+
+    Little(const string &fileName);
 
     virtual ~Little();
 
@@ -35,8 +43,34 @@ public:
 
     void setReference(double reference);
 
+    MatrixXd *getDistanceMatrix() const;
+
+    void setDistanceMatrix(MatrixXd *distanceMatrix);
+
+    const string &getFileName() const;
+
+    void setFileName(const string &fileName);
+
+    /**
+     * Satrt the algorithm
+     */
     void start();
 
+    /**
+     * Sort the segments for better readability
+     * 7-6, 8-7, 6-8 -> 7-6, 6-8, 8-7
+     */
+    void sortSegments();
+
+    /**
+     * Print the results of the algorithm
+     */
+    void printResults();
+
+    /**
+     * Examine the node
+     * @param node
+     */
     void examineNode(LittleNode node);
 
     /**
@@ -52,6 +86,13 @@ public:
      * @return A matrix of doubles
      */
     MatrixXd *getDistancesMatrix(vector<Coordinates> coordinates);
+
+    /**
+     * Compute the maximum number of nodes the matrix size can create
+     * @param nbRows the matrix's number of rows
+     * @return the number of nodes this matrix can create at most
+     */
+    size_t computeMaxNumberOfNodes(size_t nbRows);
 };
 
 

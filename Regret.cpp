@@ -46,3 +46,11 @@ bool Regret::operator>=(const Regret &rhs) const {
     return !(*this < rhs);
 }
 
+bool Regret::operator==(const Regret &rhs) const {
+    return value == rhs.value;
+}
+
+bool Regret::operator!=(const Regret &rhs) const {
+    return !(rhs == *this);
+}
+

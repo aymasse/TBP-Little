@@ -1,6 +1,7 @@
-#include <iostream>
+#include "Little.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Little little = Little("../ville.txt");
+    little.start();
     return 0;
 }

@@ -1,6 +1,8 @@
 #ifndef TBP_LITTLE_SEGMENT_H
 #define TBP_LITTLE_SEGMENT_H
 
+#include <ostream>
+
 class Segment {
 private:
     long from;
@@ -17,6 +19,10 @@ public:
     long getTo() const;
 
     void setTo(long to);
+
+    friend std::ostream &operator<<(std::ostream &os, const Segment &segment);
+
+    Segment inverse();
 };
 
 

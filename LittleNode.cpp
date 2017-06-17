@@ -3,20 +3,25 @@
 LittleNode::LittleNode() {
     matrix = nullptr;
     value = -1;
+    parentValue = 0;
     segments = vector<Segment>();
 }
 
 LittleNode::LittleNode(MatrixXd *matrix) : matrix(matrix) {
     value = -1;
+    parentValue = 0;
     segments = vector<Segment>();
 }
 
-LittleNode::LittleNode(MatrixXd *matrix, const vector<Segment> &segments) : matrix(matrix), segments(segments) {
+LittleNode::LittleNode(MatrixXd *matrix, double parentValue, const vector<Segment> &segments) : matrix(matrix),
+                                                                                                parentValue(
+                                                                                                        parentValue),
+                                                                                                segments(segments) {
     value = -1;
 }
 
-LittleNode::LittleNode(MatrixXd *matrix, double value, const vector<Segment> &segments) : matrix(matrix), value(value),
-                                                                                          segments(segments) {}
+LittleNode::LittleNode(MatrixXd *matrix, double value, double parentValue, const vector<Segment> &segments) : matrix(
+        matrix), value(value), parentValue(parentValue), segments(segments) {}
 
 double LittleNode::getValue() const {
     return value;
@@ -26,7 +31,7 @@ void LittleNode::setValue(double value) {
     LittleNode::value = value;
 }
 
-const vector<Segment> & LittleNode::getSegments() const {
+const vector<Segment> &LittleNode::getSegments() const {
     return segments;
 }
 
@@ -42,32 +47,37 @@ void LittleNode::setMatrix(MatrixXd *matrix) {
     LittleNode::matrix = matrix;
 }
 
-double LittleNode::reduceMatrixRow(size_t row) {
-    if (matrix->rows() > row || row < 0) {
-        double rowMin = matrix->row(row).minCoeff();
-
-        for (size_t col = 0; col < matrix->cols(); ++col) {
-            (*matrix)(row, col) -= rowMin;
-        }
-
-        return rowMin;
-    } else {
+double LittleNode::reduceMatrixRow(long row) {
+    if (matrix->rows() < row || row < 0) {
         throw out_of_range("Provided row index is out of matrix bounds.");
     }
+
+    double rowMin = getRowMin(row);
+
+    for (size_t col = 0; col < matrix->cols(); ++col) {
+        if ((*matrix)(row, col) >= 0) {
+            (*matrix)(row, col) -= rowMin;
+        }
+    }
+
+    return rowMin;
 }
 
-double LittleNode::reduceMatrixCol(size_t col) {
-    if (matrix->cols() > col || col < 0) {
-        double colMin = matrix->col(col).minCoeff();
-
-        for (size_t row = 0; row < matrix->rows(); ++row) {
-            (*matrix)(row, col) -= colMin;
-        }
-
-        return colMin;
-    } else {
+double LittleNode::reduceMatrixCol(long col) {
+    if (matrix->cols() < col || col < 0) {
         throw out_of_range("Provided column index is out of matrix bounds.");
     }
+
+    double colMin = getColMin(col);
+
+    for (size_t row = 0; row < matrix->rows(); ++row) {
+        if ((*matrix)(row, col) >= 0) {
+            (*matrix)(row, col) -= colMin;
+        }
+    }
+
+    return colMin;
+
 }
 
 double LittleNode::reduceMatrixRows() {
@@ -100,33 +110,23 @@ double LittleNode::reduceMatrix() {
 }
 
 void LittleNode::removeMatrixRow(long row) {
-    long nbRows = matrix->rows() - 1;
-    long nbCols = matrix->cols();
-
-    if (row > nbRows || row < 0) {
+    if (row > matrix->rows() || row < 0) {
         throw out_of_range("Provided row index is out of matrix range.");
     }
 
-    if (row < nbRows) {
-        matrix->block(row, 0, nbRows - row, nbCols) = matrix->block(row + 1, 0, nbRows - row, nbCols);
+    for (size_t col = 0; col < matrix->cols(); ++col) {
+        disableSegment(Segment(row, col));
     }
-
-    matrix->conservativeResize(nbRows, nbCols);
 }
 
 void LittleNode::removeMatrixCol(long col) {
-    long nbRows = matrix->rows();
-    long nbCols = matrix->cols() - 1;
-
-    if (col > nbCols || col < 0) {
+    if (col > matrix->cols() || col < 0) {
         throw out_of_range("Provided column index is out of matrix range.");
     }
 
-    if (col < nbCols) {
-        matrix->block(0, col, nbRows, nbCols - col) = matrix->block(0, col + 1, nbRows, nbCols - col);
+    for (size_t row = 0; row < matrix->rows(); ++row) {
+        disableSegment(Segment(row, col));
     }
-
-    matrix->conservativeResize(nbRows, nbCols);
 }
 
 Regret LittleNode::getMaxRegret() {
@@ -170,19 +170,29 @@ Regret LittleNode::computeRegret(Segment segment) {
     }
 
     //Compute the minimal value in the specified row
-    for (size_t col = 0; col < matrix->cols(); ++col) {
-        if (col != segment.getTo()) {
-            if ((*matrix)(segment.getFrom(), col) < minRow) {
-                minRow = (*matrix)(segment.getFrom(), col);
+    if (matrix->row(segment.getFrom()).maxCoeff() < 0) {
+        minRow = 0;
+    } else {
+        for (size_t col = 0; col < matrix->cols(); ++col) {
+            if (col != segment.getTo()) {
+                double value = (*matrix)(segment.getFrom(), col);
+                if (value >= 0 && value < minRow) {
+                    minRow = value;
+                }
             }
         }
     }
 
-    //Compute the minimal value in the specified column
-    for (size_t row = 0; row < matrix->rows(); ++row) {
-        if (row != segment.getFrom()) {
-            if ((*matrix)(row, segment.getTo()) < minCol) {
-                minCol = (*matrix)(row, segment.getTo());
+    if (matrix->col(segment.getTo()).maxCoeff() < 0) {
+        minCol = 0;
+    } else {
+        //Compute the minimal value in the specified column
+        for (size_t row = 0; row < matrix->rows(); ++row) {
+            if (row != segment.getFrom()) {
+                double value = (*matrix)(row, segment.getTo());
+                if (value >= 0 && value < minCol) {
+                    minCol = (*matrix)(row, segment.getTo());
+                }
             }
         }
     }
@@ -190,5 +200,137 @@ Regret LittleNode::computeRegret(Segment segment) {
     regret.setValue(minRow + minCol);
 
     return regret;
+}
+
+void LittleNode::disableLoops() {
+    vector<Segment> segmentToExamine = segments;
+    vector<Loop> loops = vector<Loop>();
+
+    if (segmentToExamine.size() > 0) {
+        while (segmentToExamine.size() > 0) {
+            bool found = false;
+
+            for (size_t loopIndex = 0; loopIndex < loops.size(); ++loopIndex) {
+                vector<Segment>::iterator it = segmentToExamine.begin();
+
+                while (it != segmentToExamine.end()) {
+                    bool match = false;
+
+                    if (it->getTo() == loops.at(loopIndex).getStart()) {
+                        vector<Segment> loopSegments = loops.at(loopIndex).getLoop();
+                        loopSegments.insert(loopSegments.begin(), *it);
+                        loops.at(loopIndex).setLoop(loopSegments);
+                        match = true;
+                        found = true;
+                    }
+
+                    if (it->getFrom() == loops.at(loopIndex).getEnd()) {
+                        vector<Segment> loopSegments = loops.at(loopIndex).getLoop();
+                        loopSegments.push_back(*it);
+                        loops.at(loopIndex).setLoop(loopSegments);
+                        match = true;
+                        found = true;
+                    }
+
+                    if (match) {
+                        segmentToExamine.erase(it);
+                        it = segmentToExamine.begin();
+                    } else {
+                        ++it;
+                    }
+                }
+            }
+
+            if (!found) {
+                Loop loop = Loop();
+                vector<Segment> loopSegments = loop.getLoop();
+                vector<Segment>::iterator it = segmentToExamine.begin();
+                loopSegments.push_back(*it);
+                segmentToExamine.erase(it);
+                loop.setLoop(loopSegments);
+                loops.push_back(loop);
+            }
+        }
+
+        for (size_t loopIndex = 0; loopIndex < loops.size(); ++loopIndex) {
+            Segment closing = loops.at(loopIndex).computeClosing();
+            disableSegment(closing);
+//            cout << "Disabling "
+//                 << closing
+//                 << " for loop "
+//                 << loops.at(loopIndex)
+//                 << endl;
+        }
+    }
+}
+
+double LittleNode::getRowMin(long row) {
+    double rowMin = numeric_limits<double>::max();
+
+    if (row > matrix->rows() || row < 0) {
+        throw out_of_range("Provided row index is out of matrix's bounds.");
+    }
+
+    if (matrix->row(row).maxCoeff() < 0) {
+        return 0;
+    }
+
+    for (int col = 0; col < matrix->cols(); ++col) {
+        double value = matrix->row(row)(0, col);
+        if (value >= 0 && value < rowMin) {
+            rowMin = value;
+        }
+    }
+
+    return rowMin;
+}
+
+double LittleNode::getColMin(long col) {
+    double colMin = numeric_limits<double>::max();
+
+    if (col > matrix->cols() || col < 0) {
+        throw out_of_range("Provided column index is out of matrix's bounds.");
+    }
+
+    if (matrix->col(col).maxCoeff() < 0) {
+        return 0;
+    }
+
+    for (int row = 0; row < matrix->rows(); ++row) {
+        double value = matrix->col(col)(row, 0);
+        if (value >= 0 && value < colMin) {
+            colMin = value;
+        }
+    }
+
+    return colMin;
+}
+
+void LittleNode::disableSegment(Segment segment) {
+    long from = segment.getFrom();
+    long to = segment.getTo();
+
+    if (from < 0 || from > matrix->rows() || to < 0 || to > matrix->cols()) {
+        throw out_of_range("Provided segment is not in the matrix.");
+    }
+
+    if ((*matrix)(segment.getFrom(), segment.getTo()) != -1) {
+        (*matrix)(segment.getFrom(), segment.getTo()) = -1;
+//        cout << "Disabling segment "
+//             << segment
+//             << endl;
+    }
+}
+
+double LittleNode::getParentValue() const {
+    return parentValue;
+}
+
+void LittleNode::setParentValue(double parentValue) {
+    LittleNode::parentValue = parentValue;
+}
+
+LittleNode::~LittleNode() {
+//    delete matrix;
 }
 

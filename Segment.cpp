@@ -22,3 +22,12 @@ long Segment::getTo() const {
 void Segment::setTo(long to) {
     Segment::to = to;
 }
+
+std::ostream &operator<<(std::ostream &os, const Segment &segment) {
+    os << "from: " << segment.from << " to: " << segment.to;
+    return os;
+}
+
+Segment Segment::inverse() {
+    return Segment(to, from);
+}

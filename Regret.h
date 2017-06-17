@@ -36,6 +36,9 @@ public:
 
     bool operator>=(const Regret &rhs) const;
 
+    bool operator==(const Regret &rhs) const;
+
+    bool operator!=(const Regret &rhs) const;
 };
 
 
