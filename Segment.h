@@ -1,23 +1,22 @@
 #ifndef TBP_LITTLE_SEGMENT_H
 #define TBP_LITTLE_SEGMENT_H
 
-
 class Segment {
 private:
-    int from;
-    int to;
+    long from;
+    long to;
 public:
     Segment();
 
-    Segment(int from, int to);
+    Segment(long from, long to);
 
-    int getFrom() const;
+    long getFrom() const;
 
-    void setFrom(int from);
+    void setFrom(long from);
 
-    int getTo() const;
+    long getTo() const;
 
-    void setTo(int to);
+    void setTo(long to);
 };
 
 

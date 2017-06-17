@@ -8,7 +8,7 @@ Little::Little() {
 
 Little::~Little() {}
 
-const stack<LittleNode> &Little::getNodes() const {
+const stack<LittleNode> & Little::getNodes() const {
     return nodes;
 }
 
@@ -24,7 +24,7 @@ void Little::setReference(double reference) {
     Little::reference = reference;
 }
 
-const vector<Segment> &Little::getSegments() const {
+const vector<Segment> & Little::getSegments() const {
     return segments;
 }
 
@@ -58,7 +58,22 @@ void Little::examineNode(LittleNode node) {
     if (node.getMatrix()->size() > 4) {
         //Not last node
         node.setValue(node.reduceMatrix());
+        Regret maxRegret = node.getMaxRegret();
 
+//        //Exclude path matrix
+//        MatrixXd *excludeMatrix = new MatrixXd(node.getMatrix());
+//        (*excludeMatrix)(maxRegret.getSegment().getFrom(),
+//                         maxRegret.getSegment().getTo()) = numeric_limits<double>::max();
+//        LittleNode excludeNode = LittleNode(excludeMatrix, node.getValue() + maxRegret.getValue(), node.getSegments());
+//        nodes.push(excludeNode);
+//
+//        //Include path matrix
+//        MatrixXd* includeMatrix = new MatrixXd(node.getMatrix());
+//        LittleNode includeNode = LittleNode(includeMatrix, node.getSegments());
+//        includeNode.getSegments().push_back(maxRegret.getSegment());
+//        includeNode.removeMatrixRow(maxRegret.getSegment().getFrom());
+//        includeNode.removeMatrixCol(maxRegret.getSegment().getTo());
+//        nodes.push(includeNode);
     } else {
         //Last node
 

@@ -23,11 +23,11 @@ public:
 
     virtual ~Little();
 
-    const stack<LittleNode> &getNodes() const;
+    const stack<LittleNode> & getNodes() const;
 
     void setNodes(const stack<LittleNode> &nodes);
 
-    const vector<Segment> &getSegments() const;
+    const vector<Segment> & getSegments() const;
 
     void setSegments(const vector<Segment> &segments);
 

@@ -2,9 +2,12 @@
 #define TBP_LITTLE_LITTLENODE_H
 
 #include <vector>
+#include <exception>
+#include <limits>
 
 #include "Eigen/Core"
 #include "Segment.h"
+#include "Regret.h"
 
 using namespace Eigen;
 using namespace std;
@@ -19,6 +22,8 @@ public:
 
     LittleNode(MatrixXd *matrix);
 
+    LittleNode(MatrixXd *matrix, const vector<Segment> &segments);
+
     LittleNode(MatrixXd *matrix, double value, const vector<Segment> &segments);
 
     MatrixXd *getMatrix() const;
@@ -29,7 +34,7 @@ public:
 
     void setValue(double value);
 
-    const vector<Segment> &getSegments() const;
+    const vector<Segment> & getSegments() const;
 
     void setSegments(const vector<Segment> &segments);
 
@@ -74,13 +79,38 @@ public:
      * Remove a row from the matrix
      * @param row the row index
      */
-    void removeMatrixRow(size_t row);
+    void removeMatrixRow(long row);
 
     /**
      * Remove a column from the matrix
      * @param col the column index
      */
-    void removeMatrixCol(size_t col);
+    void removeMatrixCol(long col);
+
+    /**
+     * Return the maximal regret
+     * @return the maximal regret
+     */
+    Regret getMaxRegret();
+
+    /**
+     * Return a list of regrets
+     * @return a list of regrets
+     */
+    vector<Regret> getRegrets();
+
+    /**
+     * Return a list of segment containing 0
+     * @return a list of segments containing 0
+     */
+    vector<Segment> getRegretsSegments();
+
+    /**
+     * Compute a regret at the given segment
+     * @param segment
+     * @return a regret
+     */
+    Regret computeRegret(Segment segment);
 };
 
 

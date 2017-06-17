@@ -1,21 +1,24 @@
 #include "Segment.h"
 
-Segment::Segment() {}
+Segment::Segment() {
+    from = 0;
+    to = 0;
+}
 
-Segment::Segment(int from, int to) : from(from), to(to) {}
+Segment::Segment(long from, long to) : from(from), to(to) {}
 
-int Segment::getFrom() const {
+long Segment::getFrom() const {
     return from;
 }
 
-void Segment::setFrom(int from) {
+void Segment::setFrom(long from) {
     Segment::from = from;
 }
 
-int Segment::getTo() const {
+long Segment::getTo() const {
     return to;
 }
 
-void Segment::setTo(int to) {
+void Segment::setTo(long to) {
     Segment::to = to;
 }
