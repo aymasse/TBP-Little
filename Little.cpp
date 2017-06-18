@@ -64,6 +64,8 @@ void Little::start() {
         if (currentNodeValue < reference) {
             examineNode(currentNode);
         }
+
+        delete currentNode.getMatrix();
     }
 
     sortSegments();
@@ -71,47 +73,17 @@ void Little::start() {
 
     auto finish = Clock::now();
 
-    cout << "Algorithme ex�cut� en "
+    cout << "Algorithm executed in "
          << chrono::duration_cast<chrono::seconds>(finish - start).count()
-         << " secondes."
+         << " seconds."
          << endl;
 }
 
 void Little::examineNode(LittleNode node) {
-//    cout << "Number of visited nodes: "
-//         << nbOfVisitedNodes
-//         << endl
-//         << "Current number of nodes: "
-//         << node.getSegments().size()
-//         << endl
-//         << "Number of nodes left: "
-//         << node.getMatrix()->rows() - node.getSegments().size()
-//         << endl
-//         << "Current included nodes: "
-//         << endl;
-//
-//    for (Segment segment : node.getSegments()) {
-//        cout << segment.getFrom()
-//             << " - "
-//             << segment.getTo()
-//             << ", ";
-//    }
-//
-//    cout << endl;
-
     node.disableLoops();
 
     double reducedAmount = node.reduceMatrix();
     double newValue = reducedAmount + node.getParentValue();
-
-//    cout << "New node value is: "
-//         << "reduced amount: "
-//         << reducedAmount
-//         << " + parent value: "
-//         << node.getParentValue()
-//         << " = "
-//         << newValue
-//         << endl;
 
     node.setValue(newValue);
 
@@ -119,7 +91,6 @@ void Little::examineNode(LittleNode node) {
         if (node.getMatrix()->rows() - node.getSegments().size() > 2) {
             //Not last node
             Regret maxRegret = node.getMaxRegret();
-//            cout << "Max regret: " << maxRegret.getValue() << endl;
 
             //Include path matrix
             MatrixXd *includeMatrix = new MatrixXd(*node.getMatrix());
@@ -129,10 +100,6 @@ void Little::examineNode(LittleNode node) {
             vector<Segment> newNodeSegments = includeNode.getSegments();
             newNodeSegments.push_back(maxRegret.getSegment());
             includeNode.setSegments(newNodeSegments);
-
-//            cout << "Including segment "
-//                 << maxRegret.getSegment()
-//                 << endl;
 
             //Remove depart row and finish column
             includeNode.removeMatrixRow(maxRegret.getSegment().getFrom());
@@ -164,18 +131,8 @@ void Little::examineNode(LittleNode node) {
                 }
             }
 
-//            cout << "Setting new reference to current node value: "
-//                 << node.getValue()
-//                 << endl;
             reference = node.getValue();
         }
-    } else {
-//        cout << "Current node value: "
-//             << newValue
-//             << " is higher than reference: "
-//             << reference
-//             << ". This branch will be excluded."
-//             << endl;
     }
 }
 
@@ -277,29 +234,30 @@ MatrixXd *Little::getDistancesMatrix(vector<Coordinates> coordinates) {
 void Little::printResults() {
     double totalDistance = 0;
 
-    cout << "Chemin optimis� : " << endl;
+    cout << "Optimal path : " << endl;
 
     for (vector<Segment>::iterator iterator = segments.begin(); iterator < segments.end(); ++iterator) {
         long from = iterator->getFrom();
         long to = iterator->getTo();
-        cout << "De "
+        cout << "From "
              << from + 1
-             << " � "
+             << " to "
              << to + 1
-             << " pour une distance de "
+             << " for a distance of "
              << (*distanceMatrix)(from, to)
              << endl;
 
         totalDistance += (*distanceMatrix)(from, to);
     }
 
-    cout << "Co�t total : "
+    cout << "Total cost: "
          << totalDistance
          << endl;
-    cout << "Nombre de noeuds visit�s: "
+    cout << "Number of visited nodes: "
          << nbOfVisitedNodes
-         << " sur "
+         << " of "
          << computeMaxNumberOfNodes(distanceMatrix->rows())
+         << " maximum nodes."
          << endl;
 }
 
